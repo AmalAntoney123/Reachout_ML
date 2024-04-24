@@ -25,6 +25,7 @@ def login():
                 session['email'] = email
                 session['name'] = user['name']
                 session['age'] = user['age']
+                session['gender'] = user['gender']
                 session['uid'] = str(user['_id'])
                 # Redirect to the home page after login
                 return redirect(url_for('user'))

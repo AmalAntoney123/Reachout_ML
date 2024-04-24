@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReachOut Student Mental Health Support</title>
+    <title>Reach Out Student Mental Health Support</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
+        crossorigin="anonymous"></script>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -62,7 +67,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href=".">
-                    <h2><b>ReachOut</b></h2>
+                    <h2><b>Reach Out</b></h2>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -95,10 +100,17 @@
             <div class="row">
                 <div class="col-md-3 sidebar">
                     <div class="d-flex flex-column align-items-center mb-4">
-                        <img src="https://via.placeholder.com/100" alt="Profile" class="rounded-circle mb-1">
+                        {% if userGender == 'male' %}
+                        <img src="{{ url_for('static', filename='images/profile-avatar.png') }}" alt="Profile"
+                            class="rounded-circle mb-1" style="max-width:100px">
+
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/profile-avatar-girl.png') }}" alt="Profile"
+                            class="rounded-circle mb-1" style="max-width:100px">
+                        {% endif %}
                         <h5 class="fw-bold mb-1">{{userName}}</h5>
                         <p class="my-0 text-muted">{{userEmail}}</p>
-                        <p class="my-0 text-muted">Age :{{userAge}}</p>
+                        <p class="my-0 text-muted">Age : {{userAge}}</p>
                     </div>
                     <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -118,8 +130,135 @@
                 <div class="col-md-9">
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <h2>Home</h2>
-                            <p>This is the home tab content.</p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card mb-4" style="background-color: #f8e9d6;">
+                                        <div class="card-header" style="background-color: #f0d2a3;">
+                                            <h4 class="card-title">Quote of the day</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <blockquote class="blockquote">
+                                                <span class="mb-3">"{{ quote }}"</span>
+                                                <footer class="blockquote-footer mt-3">{{ author }}</footer>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card mb-4" style="background-color: #e0f4ff;">
+                                        <div class="card-header" style="background-color: #b3e6ff;">
+                                            <h4 class="card-title">Today's Mood</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group">
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge bg-danger rounded-pill me-2">1</span>
+                                                        <span>Stress</span>
+                                                    </div>
+                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
+                                                        <div class="progress-bar bg-danger" role="progressbar"
+                                                            style="width: 20%;" aria-valuenow="1" aria-valuemin="1"
+                                                            aria-valuemax="5"></div>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge bg-warning rounded-pill me-2">2</span>
+                                                        <span>Anxiety</span>
+                                                    </div>
+                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
+                                                        <div class="progress-bar bg-warning" role="progressbar"
+                                                            style="width: 40%;" aria-valuenow="2" aria-valuemin="1"
+                                                            aria-valuemax="5"></div>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge bg-info rounded-pill me-2">3</span>
+                                                        <span>Depression</span>
+                                                    </div>
+                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                            style="width: 60%;" aria-valuenow="3" aria-valuemin="1"
+                                                            aria-valuemax="5"></div>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge bg-primary rounded-pill me-2">4</span>
+                                                        <span>Sleep</span>
+                                                    </div>
+                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
+                                                        <div class="progress-bar bg-primary" role="progressbar"
+                                                            style="width: 80%;" aria-valuenow="4" aria-valuemin="1"
+                                                            aria-valuemax="5"></div>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge bg-success rounded-pill me-2">5</span>
+                                                        <span>Social</span>
+                                                    </div>
+                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
+                                                        <div class="progress-bar bg-success" role="progressbar"
+                                                            style="width: 100%;" aria-valuenow="5" aria-valuemin="1"
+                                                            aria-valuemax="5"></div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card mb-4" style="background-color: #e0ffe0;">
+                                        <div class="card-header" style="background-color: #b3ffb3;">
+                                            <h4 class="card-title">Recommendation</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>Based on your mood today, we recommend...</p>
+                                            <!-- Add your recommendation content here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card" style="background-color: #e0e0ff;">
+                                        <div class="card-header" style="background-color: #b3b3ff;">
+                                            <h4 class="card-title">Book Appointment</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>Schedule an appointment with our counselors for personalized support and
+                                                guidance.</p>
+                                            <a href="#appointments" class="btn btn-primary">Book Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card" style="background-color: #ffe0e0;">
+                                        <div class="card-header" style="background-color: #ffb3b3;">
+                                            <h4 class="card-title">Today's Journal</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            {% if todayJournal %}
+                                            <p>You have completed today's journal entry.</p>
+                                            {% else %}
+                                            <p>You haven't completed today's journal entry yet.</p>
+                                            <a href="#journal" class="btn btn-primary">Go to Journal</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                         <div class="tab-pane fade " id="journal" role="tabpanel" aria-labelledby="journal-tab">
                             <h2>Todays Journal</h2>
@@ -266,19 +405,71 @@
 
 
                             </div>
-                            <div class="old-journals">
-                                {% for entry in entries %}
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ entry.date}}</h5>
-                                        <p class="card-text">{{ entry.text }}</p>
-                                    </div>
-                                </div>
-                                {% endfor %}
+                            <hr>
+                            <h2>Previous Journals</h2>
+                            <div id="entries-container" class="p-2">
+                                <!-- Entries will be loaded here -->
                             </div>
+
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination" id="pagination-controls">
+                                    <!-- Pagination controls will be added here -->
+                                </ul>
+                            </nav>
                         </div>
 
                         <script>
+                            $(document).ready(function () {
+                                var currentPage = 1;
+                                var totalPages = 1;
+
+                                function loadEntries(page) {
+                                    $.ajax({
+                                        url: "{{ url_for('get_entries') }}",
+                                        data: { page: page },
+                                        type: 'GET',
+                                        success: function (data) {
+                                            $('#entries-container').html(data.entries_html);
+                                            updatePaginationControls(page, data.total_pages);
+                                        },
+                                        error: function () {
+                                            alert('Error loading entries');
+                                        }
+                                    });
+                                }
+
+                                function updatePaginationControls(page, totalPages) {
+                                    $('#pagination-controls').empty();
+
+                                    if (page > 1) {
+                                        $('#pagination-controls').append('<li class="page-item"><a class="page-link" href="#" data-page="' + (page - 1) + '"><span aria-hidden="true">&laquo;</span></a></li>');
+                                    } else {
+                                        $('#pagination-controls').append('<li class="page-item disabled"><span class="page-link">&laquo;</span></li>');
+                                    }
+
+                                    for (var i = 1; i <= totalPages; i++) {
+                                        if (i === page) {
+                                            $('#pagination-controls').append('<li class="page-item active"><span class="page-link">' + i + '</span></li>');
+                                        } else {
+                                            $('#pagination-controls').append('<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>');
+                                        }
+                                    }
+
+                                    if (page < totalPages) {
+                                        $('#pagination-controls').append('<li class="page-item"><a class="page-link" href="#" data-page="' + (page + 1) + '"><span aria-hidden="true">&raquo;</span></a></li>');
+                                    } else {
+                                        $('#pagination-controls').append('<li class="page-item disabled"><span class="page-link">&raquo;</span></li>');
+                                    }
+
+                                    $('#pagination-controls').find('a.page-link').click(function (e) {
+                                        e.preventDefault();
+                                        var page = $(this).data('page');
+                                        loadEntries(page);
+                                    });
+                                }
+
+                                loadEntries(currentPage);
+                            });
                             // Get the current date
                             const currentDate = new Date();
                             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -328,7 +519,7 @@
                     <div class="map_icon"><img src="{{ url_for('static', filename='images/call-icon.png') }}"><span
                             class="paddlin_left_0">+1 (555) 123-4567</span></div>
                     <div class="map_icon"><img src="{{ url_for('static', filename='images/mail-icon.png') }}"><span
-                            class="paddlin_left_0">support@reachout.edu</span></div>
+                            class="paddlin_left_0">support@Reach Out.edu</span></div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
                     <h1 class="adderss_text">Resources</h1>
@@ -372,7 +563,7 @@
     <!-- copyright section start -->
     <div class="copyright_section">
         <div class="container">
-            <p class="copyright_text">2019 All Rights Reserved. Design by <a href="#">ReachOut</a></p>
+            <p class="copyright_text">2019 All Rights Reserved. Design by <a href="#">Reach Out</a></p>
         </div>
     </div>
 
@@ -386,18 +577,17 @@
     <!-- javascript -->
     <!-- <script src="{{ url_for('static', filename='js/owl.carousel.js') }}"></script> -->
     <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 
 
     <!-- Bootstrap JavaScript Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <!-- Custom JavaScript -->
     <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> -->
 
     <!-- Popper.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
-        crossorigin="anonymous"></script>
+
     <script>
         $(function () {
             $('#myTab a').on('click', function (e) {

@@ -1,0 +1,8 @@
+{% for entry in entries %}
+<div class="card my-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ entry.date }}</h5>
+        <p class="card-text">{{ entry.text }}</p>
+    </div>
+</div>
+{% endfor %}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReachOut Student Mental Health Support</title>
+    <title>Reach Out Student Mental Health Support</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -23,6 +23,19 @@
     <!-- fancybox CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
         media="screen">
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -51,7 +64,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href=".">
-                    <h2><b>ReachOut</b></h2>
+                    <h2><b>Reach Out</b></h2>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -88,18 +101,24 @@
                 <div class="col-lg-4 mx-5">
                     <div class="container p-3 bg-white">
                         <h2 class="text-center mb-4">Sign Up</h2>
-                        <form action="register" method="POST">
+                        <form action="register" method="POST" id="registerForm">
                             <div class="mb-3 form-floating">
-                                <input type="text" class="form-control" id="name" name="name" placeholder=" " required>
+                                <input type="text" class="form-control" id="name" name="name" placeholder=" " required
+                                    pattern="^[a-zA-Z\s]+$" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Please enter a valid name (only letters and spaces allowed)">
                                 <label for="name">Name</label>
                             </div>
                             <div class="mb-3 form-floating">
-                                <input type="number" class="form-control" id="age" name="age" placeholder=" " required>
+                                <input type="number" class="form-control" id="age" name="age" placeholder=" " required
+                                    min="18" max="100" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Please enter a valid age between 18 and 100">
                                 <label for="age">Age</label>
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <select class="form-select" id="gender" name="gender" aria-label="Gender" required>
+                                    <select class="form-select" id="gender" name="gender" aria-label="Gender" required
+                                        data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Please select a gender">
                                         <option value="" selected disabled>Select your gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
@@ -108,24 +127,35 @@
                                 </div>
                             </div>
                             <div class="mb-3 form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder=" " required>
+                                <input type="email" class="form-control" id="email" name="email" placeholder=" "
+                                    required data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Please enter a valid college email address">
                                 <label for="email">Email</label>
                             </div>
                             <div class="mb-3 form-floating">
-                                <input type="password" class="form-control" id="password" name="password" placeholder=" " required>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder=" " required
+                                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$"
+                                    data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Password must be at least 8 characters long and contain at least one number, one lowercase letter, one uppercase letter, and one special character">
                                 <label for="password">Password</label>
                             </div>
                             <div class="mb-3 form-floating">
-                                <input type="password" class="form-control" id="cPassword" name="cPassword" placeholder=" " required>
+                                <input type="password" class="form-control" id="cPassword" name="cPassword"
+                                    placeholder=" " required data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Passwords do not match">
                                 <label for="cPassword">Confirm Password</label>
                             </div>
                             <div class="mb-3 form-floating">
-                                <input type="text" class="form-control" id="year-of-study" name="year_of_study" placeholder=" " required>
+                                <input type="text" class="form-control" id="year-of-study" name="year_of_study"
+                                    placeholder=" " required pattern="^[1-4]$" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" title="Please enter a valid year of study (1-4)">
                                 <label for="year-of-study">Year of Study</label>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Register</button>
+                            <button type="submit" class="btn btn-primary w-100" id="submitButton"
+                                disabled>Register</button>
                             <span class="d-block mt-3">Existing user? <a href="signin">Sign In</a></span>
-                        </form>                        
+                        </form>
                     </div>
 
                 </div>
@@ -142,7 +172,7 @@
                         <div class="map_icon"><img src="{{ url_for('static', filename='images/call-icon.png') }}"><span
                                 class="paddlin_left_0">+1 (555) 123-4567</span></div>
                         <div class="map_icon"><img src="{{ url_for('static', filename='images/mail-icon.png') }}"><span
-                                class="paddlin_left_0">support@reachout.edu</span></div>
+                                class="paddlin_left_0">support@Reach Out.edu</span></div>
                     </div>
                     <div class="col-lg-3 col-sm-6">
                         <h1 class="adderss_text">Resources</h1>
@@ -186,37 +216,71 @@
         <!-- copyright section start -->
         <div class="copyright_section">
             <div class="container">
-                <p class="copyright_text">2019 All Rights Reserved. Design by <a href="#">ReachOut</a></p>
+                <p class="copyright_text">2019 All Rights Reserved. Design by <a href="#">Reach Out</a></p>
             </div>
         </div>
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script type="text/javascript">
+            // jQuery
+            $(document).ready(function () {
+                const emailRegex = /^[\w-\.]+@[\w-]+\.sjcetpalai\.ac\.in$/;
+                
+                // Input field blur event handlers
+                $('#name').on('blur', function () {
+                    validateInput($(this), /^[a-zA-Z\s]+$/);
+                });
 
-        <!-- Popper.js -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+                $('#age').on('blur', function () {
+                    validateInput($(this), /^$|^([1-9][0-9]?)$/, $(this).val() >= 18 && $(this).val() <= 100);
+                });
 
-        <!-- Bootstrap JavaScript Bundle -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                $('#gender').on('blur', function () {
+                    validateInput($(this), null, $(this).val() !== '');
+                });
 
-        <!-- Custom JavaScript -->
-        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/plugin.js') }}"></script>
-        <!-- sidebar -->
-        <script src="{{ url_for('static', filename='js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-        <!-- javascript -->
-        <script src="{{ url_for('static', filename='js/owl.carousel.js') }}"></script>
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+                $('#email').on('blur', function () {
+                    validateInput($(this), emailRegex);
+                });
 
-        <!-- Popper.js -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+                $('#password').on('blur', function () {
+                    validateInput($(this), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/);
+                });
 
-        <!-- Bootstrap JavaScript Bundle -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                $('#cPassword').on('blur', function () {
+                    const password = $('#password').val();
+                    const cPassword = $(this).val();
+                    validateInput($(this), null, cPassword === password);
+                });
 
-        <!-- Custom JavaScript -->
-        <script src="{{ url_for('static', filename='script.js') }}"></script>
+                $('#year-of-study').on('blur', function () {
+                    validateInput($(this), /^[1-4]$/);
+                });
+
+                // Validate input function
+                function validateInput($input, regex, condition = null) {
+                    const isValid = condition !== null ? condition : (regex ? regex.test($input.val()) : true);
+                    if (isValid) {
+                        $input.removeClass('is-invalid');
+                        $input.tooltip('dispose');
+                    } else {
+                        $input.addClass('is-invalid');
+                        $input.tooltip('show');
+                    }
+                    checkFormValidity();
+                }
+
+                // Check form validity and enable/disable submit button
+                function checkFormValidity() {
+                    const form = $('#registerForm');
+                    const isFormValid = form[0].checkValidity();
+                    $('#submitButton').prop('disabled', !isFormValid);
+                }
+
+                // Update form validity on input changes
+                $('#registerForm input, #registerForm select').on('input', function () {
+                    checkFormValidity();
+                });
+            });
+        </script>
 </body>
 
 </html>
