@@ -1,13 +1,22 @@
 from flask import Flask, render_template,session, redirect, url_for
 from register import register_bp
 from login import login_bp
+from journal import journal_bp
+from pymongo import MongoClient
+import datetime 
 
 app = Flask(__name__)
 
 app.register_blueprint(register_bp)
 app.register_blueprint(login_bp)
+app.register_blueprint(journal_bp)
 
 app.secret_key = 'secret_key123'
+
+client = MongoClient('mongodb://localhost:27017/')
+db = client['db_reachOut']
+collection = db['journal']
+
 
 @app.route('/')
 def index():
@@ -33,13 +42,20 @@ def user():
     userName = session.get('name')
     userEmail = session.get('email')
     userAge = session.get('age')
-    
+    userID = session.get('uid')
+    success = session.pop('success', None)
+    entries = list(collection.find({'userID': userID}))
+
+    current_date = datetime.date.today().strftime('%B %d, %Y')
+    query = {'userID': userID, 'date': current_date}
+    todayJournal = list(collection.find(query))
+
     # Check if session variables exist
     if not userName or not userEmail or not userAge:
         # Redirect user to sign-in page if session doesn't exist
         return redirect(url_for('signin'))  # Assuming your sign-in route is named 'signin'
 
-    return render_template('user.html', userEmail=userEmail, userName=userName, userAge = userAge)
+    return render_template('user.html', userEmail=userEmail, userName=userName, userAge = userAge,userID =userID,success = success, entries=entries,todayJournal = todayJournal)
 
 @app.route('/logout')
 def logout():
