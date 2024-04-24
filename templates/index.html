@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <!-- basic -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <!-- mobile metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- site metas -->
+   <title>ReachOut - Student Mental Healt Support</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="{{ url_for('index.static', filename='css/bootstrap.min.css') }}">
+
+   <!-- Custom CSS -->
+   <link rel="stylesheet" href="{{ url_for('index.static', filename='css/style.css') }}">
+   <!-- Responsive-->
+   <link rel="stylesheet" href="{{ url_for('index.static', filename='css/responsive.css') }}">
+   <!-- fevicon -->
+   <link rel="icon" href="{{ url_for('index.static', filename='images/fevicon.png') }}" type="image/gif" />
+   <!-- Scrollbar Custom CSS -->
+   <link rel="stylesheet" href="{{ url_for('index.static', filename='css/jquery.mCustomScrollbar.min.css') }}">
+   <!-- owl stylesheets -->
+   <link rel="stylesheet" href="{{ url_for('index.static', filename='css/owl.carousel.min.css') }}">
+   <link rel="stylesheet" href="{{ url_for('index.static', filename='css/owl.theme.default.min.css') }}">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+      media="screen">
+
+   <style>
+      i {
+         font-size: 70px;
+         color: white;
+      }
+
+      .news_section_2_icon {
+         font-size: 70px;
+         color: black;
+      }
+
+      .news_section_2 .box_main {
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         padding: 20px;
+         box-sizing: border-box;
+      }
+
+      .news_section_2 .icon_1 {
+         margin-bottom: 20px;
+      }
+   </style>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.min.js"
+      integrity="sha512-EKWWs1ZcA2ZY9lbLISPz8aGR2+L7JVYqBAYTq5AXgBkSjRSuQEGqWx8R1zAX16KdXPaCjOCaKE8MCpU0wcHlHA=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap-grid.min.css"
+      integrity="sha512-Aa+z1qgIG+Hv4H2W3EMl3btnnwTQRA47ZiSecYSkWavHUkBF2aPOIIvlvjLCsjapW1IfsGrEO3FU693ReouVTA=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+   <!-- header section start -->
+   <div class="header_section">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+               <h2><b>ReachOut</b></h2>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+               data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+               aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                     <a class="nav-link" href="index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="#health">Health</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="#news">News</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="#contact">Contact Us</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link active" href="signin.html">Sign In</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <!-- header section end -->
+      <!-- banner section start -->
+      <div id="main_slider" class="carousel slide" data-ride="carousel">
+         <div class="carousel-inner">
+            <div class="carousel-item active">
+               <div class="banner_section">
+                  <div class="container">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <h1 class="banner_taital">ReachOut <br><span style="color: #151515;">Mental Health</span>
+                           </h1>
+                           <p class="banner_text">Empowering students to prioritize mental well-being</p>
+                           <div class="btn_main">
+                              <div class="more_bt"><a href="#">Sign In</a></div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="image_1"><img src="{{ url_for('index.static', filename='images/img-1.png') }}"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="carousel-item">
+               <div class="banner_section">
+                  <div class="container">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <h1 class="banner_taital">Accessible <br><span style="color: #151515;">Support</span></h1>
+                           <p class="banner_text">Confidential journaling, counselor appointments, and more</p>
+                           <div class="btn_main">
+                              <div class="more_bt"><a href="#">Sign In</a></div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="image_1"><img src="{{ url_for('index.static', filename='images/img-1.png') }}"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="carousel-item">
+               <div class="banner_section">
+                  <div class="container">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <h1 class="banner_taital">Personalized <br><span style="color: #151515;">Care</span></h1>
+                           <p class="banner_text">Tailored recommendations for a happier, healthier you</p>
+                           <div class="btn_main">
+                              <div class="more_bt"><a href="#">Sign In</a></div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="image_1"><img src="{{ url_for('index.static', filename='images/img-1.png') }}"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
+            <i class="fa fa-arrow-left" style="font-size:24px; padding-top: 4px;"></i>
+         </a>
+         <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
+            <i class="fa fa-arrow-right" style="font-size:24px; padding-top: 4px;"></i>
+         </a>
+      </div>
+   </div>
+   <!-- banner section end -->
+   <!-- health section start -->
+   <div class="health_section layout_padding" id="health">
+      <div class="container">
+         <h1 class="health_taital">Mental Well-being for Student Success</h1>
+         <p class="health_text">At ReachOut, we understand the unique challenges students face, and we're here to
+            provide comprehensive mental health support to help you thrive academically and personally.</p>
+         <div class="health_section layout_padding">
+            <div class="row">
+               <div class="col-sm-7">
+                  <div class="image_main">
+                     <div class="main">
+                        <img src="{{ url_for('index.static', filename='images/img-2.png') }}" alt="Confidential Journaling" class="image" style="width:100%">
+                     </div>
+                     <div class="middle">
+                        <div class="text"><img src="{{ url_for('index.static', filename='images/icon-journal.png') }}" style="width: 40px;"></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-5">
+                  <div class="image_main_1">
+                     <div class="main">
+                        <img src="{{ url_for('index.static', filename='images/img3.png') }}" alt="Counselor Support" class="image" style="width:100%">
+                     </div>
+                     <div class="middle">
+                        <div class="text"><img src="{{ url_for('index.static', filename='images/icon-counselor.png') }}" style="width: 40px;"></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="getquote_bt_1"><a href="#">Explore Resources <span><img src="{{ url_for('index.static', filename='images/right-arrow.png') }}"></span></a>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- health section end -->
+   <!-- knowledge section end -->
+   <div class="knowledge_section layout_padding">
+      <div class="container">
+         <div class="knowledge_main">
+            <div class="left_main">
+               <h1 class="knowledge_taital">Empowering Student Well-being</h1>
+               <p class="knowledge_text">At ReachOut, we believe in equipping students with the knowledge and tools to
+                  prioritize their mental health. Explore our educational resources to learn more about self-care,
+                  stress management, and building resilience.</p>
+            </div>
+            <div class="right_main">
+               <div class="play_icon"><a href="#"><img src="{{ url_for('index.static', filename='images/play-icon.png') }}"></a></div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- knowledge section end -->
+
+   <!-- news section start -->
+   <div class="news_section layout_padding" id="news">
+      <div class="container">
+         <h1 class="health_taital">Our Commitment to You</h1>
+         <p class="health_text">ReachOut is dedicated to providing comprehensive mental health support to ensure your
+            well-being and success.</p>
+         <div class="news_section_2 layout_padding">
+            <div class="row">
+               <div class="col-lg-4 col-sm-6">
+                  <div class="box_main">
+                     <div class="icon_1"><i class="fas fa-lock"></i></div>
+                     <h4 class="daily_text">Confidential Support</h4>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6">
+                  <div class="box_main active">
+                     <div class="icon_1"><i class="fas fa-universal-access"></i></div>
+                     <h4 class="daily_text_1">Accessible Resources</h4>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6">
+                  <div class="box_main">
+                     <div class="icon_1"><i class="fas fa-user-cog"></i></div>
+                     <h4 class="daily_text_1">Personalized Care</h4>
+                  </div>
+               </div>                                                                                 
+            </div>
+         </div>
+         <div class="getquote_bt"><a href="#">Join Now <span><img src="{{ url_for('index.static', filename='images/right-arrow.png') }}"></span></a></div>
+      </div>
+   </div>
+   <!-- news section end -->
+   <!-- contact section start -->
+   <div class="contact_section layout_padding" id="appointment">
+      <div class="container">
+         <h1 class="contact_taital">How We Support You</h1>
+         <div class="news_section_2">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="icon_main">
+                     <div class="icon_7"><i class="fas fa-journal-whills news_section_2_icon"></i></div>
+                     <h4 class="diabetes_text">Confidential Journaling</h4>
+                  </div>
+                  <div class="icon_main">
+                     <div class="icon_7"><i class="fas fa-comments news_section_2_icon"></i></div>
+                     <h4 class="diabetes_text">Counselor Sessions</h4>
+                  </div>
+                  <div class="icon_main">
+                     <div class="icon_7"><i class="fas fa-heart news_section_2_icon"></i></div>
+                     <h4 class="diabetes_text">Mental Health Resources</h4>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <div class="contact_box h-100 ">
+                     <h1 class="book_text">Book an Appointment</h1>
+                     <div class="send_bt"><a href="/booking">Book Now</a></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- contact section end -->
+
+   <!-- footer section start -->
+   <div class="footer_section layout_padding" id="contact">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-3 col-sm-6">
+               <h1 class="adderss_text">Contact Us</h1>
+               <div class="map_icon"><img src="{{ url_for('index.static', filename='images/map-icon.png') }}"><span class="paddlin_left_0">University Campus, Main
+                     Rd.</span></div>
+               <div class="map_icon"><img src="{{ url_for('index.static', filename='images/call-icon.png') }}"><span class="paddlin_left_0">+1 (555)
+                     123-4567</span></div>
+               <div class="map_icon"><img src="{{ url_for('index.static', filename='images/mail-icon.png') }}"><span
+                     class="paddlin_left_0">support@reachout.edu</span></div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+               <h1 class="adderss_text">Resources</h1>
+               <div class="hiphop_text_1">Explore our comprehensive collection of mental health resources, including
+                  articles, videos, and self-care activities designed to support your well-being.</div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+               <h1 class="adderss_text">Useful Links</h1>
+               <div class="Useful_text">
+                  <ul>
+                     <li><a href="#" style="color:white!important">About Us</a></li>
+                     <li><a href="#" style="color:white!important">Join Now</a></li>
+                     <li><a href="#" style="color:white!important">Privacy Policy</a></li>
+                     <li><a href="#" style="color:white!important">Terms of Use</a></li>
+                  </ul>
+               </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+               <h1 class="adderss_text">Newsletter</h1>
+               <input type="text" class="Enter_text" placeholder="Enter your Email" name="Enter your Email">
+               <div class="subscribe_bt"><a href="#">Subscribe</a></div>
+               <div class="social_icon">
+                  <ul>
+                     <li><a href="#"><img src="{{ url_for('index.static', filename='images/fb-icon.png') }}"></a></li>
+                     <li><a href="#"><img src="{{ url_for('index.static', filename='images/twitter-icon.png') }}"></a></li>
+                     <li><a href="#"><img src="{{ url_for('index.static', filename='images/linkedin-icon.png') }}"></a></li>
+                     <li><a href="#"><img src="{{ url_for('index.static', filename='images/instagram-icon.png') }}"></a></li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- footer section end -->
+   <!-- copyright section start -->
+   <div class="copyright_section">
+      <div class="container">
+         <p class="copyright_text">2019 All Rights Reserved. Design by <a href="#">ReachOut</a></p>
+      </div>
+   </div>
+   <!-- copyright section end -->
+   <!-- Javascript files-->
+   <!-- <script src="js/jquery.min.js"></script> -->
+   <!-- jQuery -->
+<script src="{{ url_for('index.static', filename='js/jquery-3.6.4.min.js') }}"></script>
+
+<script src="{{ url_for('index.static', filename='js/plugin.js') }}"></script>
+<!-- sidebar -->
+<script src="{{ url_for('index.static', filename='js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<script src="{{ url_for('index.static', filename='js/custom.js') }}"></script>
+<!-- javascript -->
+<script src="{{ url_for('index.static', filename='js/owl.carousel.js') }}"></script>
+<!-- Custom JavaScript -->
+<script src="{{ url_for('index.static', filename='script.js') }}"></script>
+</body>
+
+</html>

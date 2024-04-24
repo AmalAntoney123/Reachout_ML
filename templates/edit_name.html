@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Name</title>
+</head>
+<body>
+    <h1>Edit Name</h1>
+    <form action="{{ url_for('names.edit_name', name=name) }}" method="post">
+        <label for="new_name">New Name:</label>
+        <input type="text" id="new_name" name="new_name" value="{{ name }}">
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Names</title>
+</head>
+<body>
+    <h1>Names</h1>
+    <ul>
+        {% for name in names %}
+            <li>{{ name }} <a href="{{ url_for('names.edit_name', name=name) }}">Edit</a></li>
+        {% endfor %}
+    </ul>
+    <form action="/insert" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <button type="submit">Add Name</button>
+    </form>
+</body>
+</html>
