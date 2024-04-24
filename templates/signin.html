@@ -91,6 +91,9 @@
                         {% if message %}
                         <div class="alert alert-success">{{ message }}</div>
                         {% endif %}
+                        {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
 
                         <form action="{{ url_for('login.login') }}" method="POST">
                             <div class="mb-3 form-floating">

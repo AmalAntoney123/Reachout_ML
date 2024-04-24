@@ -24,14 +24,14 @@ def login():
                 # Set session variables for user authentication
                 session['email'] = email
                 session['name'] = user['name']
+                session['age'] = user['age']
                 # Redirect to the home page after login
                 return redirect(url_for('user'))
             else:
                 # Incorrect password
-                error = 'Invalid email or password'
-                return redirect(url_for('signin', error=error))
+                session['error'] = 'Invalid email or password'
+                return redirect(url_for('signin'))
         else:
             # User with the given email does not exist
-            error = 'User does not exist'
-            return redirect(url_for('signin', error=error))
-        
+            session['error'] = 'User does not exist'
+            return redirect(url_for('signin'))

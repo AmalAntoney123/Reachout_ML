@@ -16,8 +16,9 @@ def index():
 @app.route('/signin')
 def signin():
     message = session.pop('message', None)
+    error = session.pop('error', None)
     # Render the signin template with the success message
-    return render_template('signin.html', message=message)
+    return render_template('signin.html', message=message,error=error)
 
 @app.route('/signup')
 def signup():
@@ -31,13 +32,14 @@ def template():
 def user():
     userName = session.get('name')
     userEmail = session.get('email')
+    userAge = session.get('age')
     
     # Check if session variables exist
-    if not userName or not userEmail:
+    if not userName or not userEmail or not userAge:
         # Redirect user to sign-in page if session doesn't exist
         return redirect(url_for('signin'))  # Assuming your sign-in route is named 'signin'
 
-    return render_template('user.html', userEmail=userEmail, userName=userName)
+    return render_template('user.html', userEmail=userEmail, userName=userName, userAge = userAge)
 
 @app.route('/logout')
 def logout():
