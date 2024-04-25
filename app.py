@@ -10,6 +10,7 @@ from login import login_bp
 from journal import journal_bp
 from quotes import quotes 
 from recommend import recommend_bp
+from appointment import appointment_bp
 
 
 app = Flask(__name__)
@@ -18,13 +19,14 @@ app.register_blueprint(register_bp)
 app.register_blueprint(login_bp)
 app.register_blueprint(journal_bp)
 app.register_blueprint(recommend_bp)
+app.register_blueprint(appointment_bp)
 
 app.secret_key = 'secret_key123'
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['db_reachOut']
 collection = db['journal']
-
+appointments_collection = db['appointment']
 
 @app.route('/')
 def index():
@@ -76,6 +78,9 @@ def user():
     
     
     success = session.pop('success', None)
+    successAppoin = session.pop('successAppoin', None)
+    user_id = session.get('uid')
+    appointment = appointments_collection.find_one({"user_id": user_id})
     
     current_date = datetime.date.today().strftime('%B %d, %Y')
     query = {'userID': userID, 'date': current_date}
@@ -88,7 +93,7 @@ def user():
 
     return render_template('user.html', userEmail=userEmail, userName=userName, userAge=userAge,
                            userID=userID, success=success, todayJournal=todayJournal,
-                           userGender=userGender, quote=quote['quote'], author=quote['author'],mood=mood)
+                           userGender=userGender, quote=quote['quote'], author=quote['author'],mood=mood, successAppoin=successAppoin, appointment=appointment)
     
 def get_quote_for_day():
     today = datetime.date.today().isoformat()

@@ -273,17 +273,25 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <!-- Home Card for Appointment -->
                                 <div class="col-md-6">
                                     <div class="card" style="background-color: #e0e0ff;">
                                         <div class="card-header" style="background-color: #b3b3ff;">
-
                                             <h4 class="card-title">Book Appointment</h4>
                                         </div>
                                         <div class="card-body">
-                                            <p>Schedule an appointment with our counselors for personalized support and
-                                                guidance.</p>
-                                            <button type="button" class="btn btn-primary"
-                                                id="appointments-tab-btn">Appointments</button>
+                                            {% if appointment %}
+                                            {% if appointment.status == 'pending' %}
+                                            <p>Your appointment request is pending approval.</p>
+                                            {% elif appointment.status == 'confirmed' %}
+                                            <p>Your appointment has been confirmed for {{
+                                                appointment.AppDate.strftime('%B %d, %Y') }}.</p>
+                                            {% elif appointment.status == 'completed' %}
+                                            <p>Your appointment has been completed.</p>
+                                            {% endif %}
+                                            {% else %}
+                                            <p>Schedule an appointment with the counselor for personalized support.</p>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -523,11 +531,41 @@
                             document.getElementById('current-date').textContent = formattedDate;
                         </script>
                     </div>
-                    <div class="tab-pane fade" id="appointments" role="tabpanel" aria-labelledby="appointments-tab">
-                        <h2>Appointments</h2>
-                        <p>This is the appointments tab content.</p>
-                    </div>
 
+                    <!-- Appointment tab -->
+                    <div class="tab-pane fade" style="height:600px" id="appointments" role="tabpanel" aria-labelledby="appointments-tab">
+                        <h2>Appointments</h2>
+                        {% if appointment %}
+                        <div class="card m-4 mb-5 pb-5">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="card-title m-0">Current Appointment</h4>
+                                <a href="cancelAppointment" class="btn btn-danger btn-sm">Cancel</a>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+                                <p><strong>Status:</strong> {{ appointment.status }}</p>
+                                {% if appointment.status == 'pending' %}
+                                <p>Your appointment request is pending approval. Please wait for confirmation.</p>
+                                {% elif appointment.status == 'confirmed' %}
+                                <p>Your appointment has been confirmed. Details will be shared with you shortly.</p>
+                                {% elif appointment.status == 'completed' %}
+                                <p>Your appointment has been completed.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <form action="bookAppointment" method="POST">
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Leave a comment here" id="reason"
+                                    name="reason" style="height: 150px" required></textarea>
+                                <label for="reason">Reason for Appointment</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Book Appointment</button>
+                        </form>
+
+
+                        {% endif %}
+                    </div>
                     <!-- journal add modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -541,6 +579,27 @@
                                 </div>
                                 <div class="modal-body">
                                     Your journal entry has been saved successfully!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- appointmentModal add modal -->
+                    <div class="modal fade" id="appointmentModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Alert</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Thank you for booking your appointment. Your request has been successfully
+                                    submitted. Please await confirmation from the counselor.
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -661,6 +720,13 @@
     <script>
         $(document).ready(function () {
             $('#exampleModal').modal('show');
+        });
+    </script>
+    {% endif %}
+    {% if successAppoin %}
+    <script>
+        $(document).ready(function () {
+            $('#appointmentModal').modal('show');
         });
     </script>
     {% endif %}
