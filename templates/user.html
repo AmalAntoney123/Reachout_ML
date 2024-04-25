@@ -152,7 +152,10 @@
                                             <h4 class="card-title">Today's Mood</h4>
                                         </div>
                                         <div class="card-body">
+                                            {% if mood|length > 0 %}
                                             <ul class="list-group">
+                                                {% for item in mood %}
+                                                {% if item.name == 'stress' %}
                                                 <li
                                                     class="list-group-item d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
@@ -161,10 +164,11 @@
                                                     </div>
                                                     <div class="progress flex-grow-1 mx-3" style="height: 20px;">
                                                         <div class="progress-bar bg-danger" role="progressbar"
-                                                            style="width: 20%;" aria-valuenow="1" aria-valuemin="1"
-                                                            aria-valuemax="5"></div>
+                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="10"
+                                                            aria-valuemin="1" aria-valuemax="5"></div>
                                                     </div>
                                                 </li>
+                                                {% elif item.name == 'anxiety' %}
                                                 <li
                                                     class="list-group-item d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
@@ -173,10 +177,11 @@
                                                     </div>
                                                     <div class="progress flex-grow-1 mx-3" style="height: 20px;">
                                                         <div class="progress-bar bg-warning" role="progressbar"
-                                                            style="width: 40%;" aria-valuenow="2" aria-valuemin="1"
-                                                            aria-valuemax="5"></div>
+                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="20"
+                                                            aria-valuemin="1" aria-valuemax="5"></div>
                                                     </div>
                                                 </li>
+                                                {% elif item.name == 'depression' %}
                                                 <li
                                                     class="list-group-item d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
@@ -185,10 +190,11 @@
                                                     </div>
                                                     <div class="progress flex-grow-1 mx-3" style="height: 20px;">
                                                         <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: 60%;" aria-valuenow="3" aria-valuemin="1"
-                                                            aria-valuemax="5"></div>
+                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="40"
+                                                            aria-valuemin="1" aria-valuemax="5"></div>
                                                     </div>
                                                 </li>
+                                                {% elif item.name == 'sleep' %}
                                                 <li
                                                     class="list-group-item d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
@@ -197,10 +203,11 @@
                                                     </div>
                                                     <div class="progress flex-grow-1 mx-3" style="height: 20px;">
                                                         <div class="progress-bar bg-primary" role="progressbar"
-                                                            style="width: 80%;" aria-valuenow="4" aria-valuemin="1"
-                                                            aria-valuemax="5"></div>
+                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="100"
+                                                            aria-valuemin="1" aria-valuemax="5"></div>
                                                     </div>
                                                 </li>
+                                                {% elif item.name == 'social' %}
                                                 <li
                                                     class="list-group-item d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
@@ -209,23 +216,38 @@
                                                     </div>
                                                     <div class="progress flex-grow-1 mx-3" style="height: 20px;">
                                                         <div class="progress-bar bg-success" role="progressbar"
-                                                            style="width: 100%;" aria-valuenow="5" aria-valuemin="1"
-                                                            aria-valuemax="5"></div>
+                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="50"
+                                                            aria-valuemin="1" aria-valuemax="5"></div>
                                                     </div>
                                                 </li>
+                                                {% endif %}
+                                                {% endfor %}
                                             </ul>
+                                            {% else %}
+                                            <a class="btn btn-primary" href="moodRecommendation">Record Today's Mood</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="card mb-4" style="background-color: #e0ffe0;">
                                         <div class="card-header" style="background-color: #b3ffb3;">
-                                            <h4 class="card-title">Recommendation</h4>
+
+                                            <h4 class="card-title">Mood recommendations</h4>
                                         </div>
                                         <div class="card-body">
-                                            <p>Based on your mood today, we recommend...</p>
-                                            <!-- Add your recommendation content here -->
+                                            {% set recommendation_item = mood|selectattr("name", "equalto",
+                                            "recommendation")|first %}
+                                            {% if mood|length > 0 %}
+                                            <p>{{ recommendation_item.value }}</p>
+                                            <div class="d-flex justify-content-end">
+                                                <a href="moodReset" class="btn btn-danger" id="resetBtn">Reset Mood</a>
+                                            </div>
+                                            {% else %}
+                                            <p>Please take the mood survey to get personalized recommendations.</p>
+                                            {% endif %}
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -233,12 +255,14 @@
                                 <div class="col-md-6">
                                     <div class="card" style="background-color: #e0e0ff;">
                                         <div class="card-header" style="background-color: #b3b3ff;">
+
                                             <h4 class="card-title">Book Appointment</h4>
                                         </div>
                                         <div class="card-body">
                                             <p>Schedule an appointment with our counselors for personalized support and
                                                 guidance.</p>
-                                            <a href="#appointments" class="btn btn-primary">Book Now</a>
+                                            <button type="button" class="btn btn-primary"
+                                                id="appointments-tab-btn">Appointments</button>
                                         </div>
                                     </div>
                                 </div>
@@ -252,7 +276,6 @@
                                             <p>You have completed today's journal entry.</p>
                                             {% else %}
                                             <p>You haven't completed today's journal entry yet.</p>
-                                            <a href="#journal" class="btn btn-primary">Go to Journal</a>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -596,6 +619,22 @@
             });
         });
     </script>
+    <script>
+        $(function () {
+            $('#home-tab-btn').on('click', function () {
+                $('#home').tab('show');
+            });
+            $('#journal-tab-btn').on('click', function () {
+                $('#journal').tab('show');
+            });
+            $('#appointments-tab-btn').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+    </script>
+
+
     <!-- Your HTML content -->
     {% if success %}
     <script>

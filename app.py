@@ -1,6 +1,7 @@
 from flask import Flask, render_template,session, redirect, url_for, request
 from pymongo import MongoClient
-import datetime 
+from datetime import timedelta,datetime
+import datetime
 import math
 import random
 
@@ -8,6 +9,7 @@ from register import register_bp
 from login import login_bp
 from journal import journal_bp
 from quotes import quotes 
+from recommend import recommend_bp
 
 
 app = Flask(__name__)
@@ -15,6 +17,7 @@ app = Flask(__name__)
 app.register_blueprint(register_bp)
 app.register_blueprint(login_bp)
 app.register_blueprint(journal_bp)
+app.register_blueprint(recommend_bp)
 
 app.secret_key = 'secret_key123'
 
@@ -49,7 +52,31 @@ def user():
     userAge = session.get('age')
     userID = session.get('uid')
     userGender = session.get('gender')
+    
+    stress = session.get('stress')
+    anxiety = session.get('anxiety')
+    depression = session.get('depression')
+    sleep = session.get('sleep')
+    social = session.get('social')
+    recommendation = session.get('recommendation')
+    mood = []
+    if stress is not None:
+        mood.append({'name': 'stress', 'value': stress})
+    if anxiety is not None:
+        mood.append({'name': 'anxiety', 'value': anxiety})
+    if depression is not None:
+        mood.append({'name': 'depression', 'value': depression})
+    if sleep is not None:
+        mood.append({'name': 'sleep', 'value': sleep})
+    if social is not None:
+        mood.append({'name': 'social', 'value': social})
+    if recommendation is not None:
+        mood.append({'name': 'recommendation', 'value': recommendation})
+
+    
+    
     success = session.pop('success', None)
+    
     current_date = datetime.date.today().strftime('%B %d, %Y')
     query = {'userID': userID, 'date': current_date}
     todayJournal = list(collection.find(query))
@@ -61,7 +88,7 @@ def user():
 
     return render_template('user.html', userEmail=userEmail, userName=userName, userAge=userAge,
                            userID=userID, success=success, todayJournal=todayJournal,
-                           userGender=userGender, quote=quote['quote'], author=quote['author'])
+                           userGender=userGender, quote=quote['quote'], author=quote['author'],mood=mood)
     
 def get_quote_for_day():
     today = datetime.date.today().isoformat()
@@ -100,6 +127,10 @@ def logout():
     # Redirect to the sign-in page
     return redirect(url_for('signin'))  # Assuming your sign-in route is named 'signin'
 
+@app.route('/moodRecommendation')
+def moodRecommendation():
+    userName = session.get('name')
+    return render_template('recommend.html', userName=userName)
 
 if __name__ == '__main__':
     app.run(debug=True)
