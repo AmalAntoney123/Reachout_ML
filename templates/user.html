@@ -153,76 +153,97 @@
                                         </div>
                                         <div class="card-body">
                                             {% if mood|length > 0 %}
-                                            <ul class="list-group">
-                                                {% for item in mood %}
-                                                {% if item.name == 'stress' %}
-                                                <li
-                                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge bg-danger rounded-pill me-2">1</span>
-                                                        <span>Stress</span>
-                                                    </div>
-                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
-                                                        <div class="progress-bar bg-danger" role="progressbar"
-                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="10"
-                                                            aria-valuemin="1" aria-valuemax="5"></div>
-                                                    </div>
-                                                </li>
-                                                {% elif item.name == 'anxiety' %}
-                                                <li
-                                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge bg-warning rounded-pill me-2">2</span>
-                                                        <span>Anxiety</span>
-                                                    </div>
-                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
-                                                        <div class="progress-bar bg-warning" role="progressbar"
-                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="20"
-                                                            aria-valuemin="1" aria-valuemax="5"></div>
-                                                    </div>
-                                                </li>
-                                                {% elif item.name == 'depression' %}
-                                                <li
-                                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge bg-info rounded-pill me-2">3</span>
-                                                        <span>Depression</span>
-                                                    </div>
-                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
-                                                        <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="40"
-                                                            aria-valuemin="1" aria-valuemax="5"></div>
-                                                    </div>
-                                                </li>
-                                                {% elif item.name == 'sleep' %}
-                                                <li
-                                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge bg-primary rounded-pill me-2">4</span>
-                                                        <span>Sleep</span>
-                                                    </div>
-                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
-                                                        <div class="progress-bar bg-primary" role="progressbar"
-                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="100"
-                                                            aria-valuemin="1" aria-valuemax="5"></div>
-                                                    </div>
-                                                </li>
-                                                {% elif item.name == 'social' %}
-                                                <li
-                                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge bg-success rounded-pill me-2">5</span>
-                                                        <span>Social</span>
-                                                    </div>
-                                                    <div class="progress flex-grow-1 mx-3" style="height: 20px;">
-                                                        <div class="progress-bar bg-success" role="progressbar"
-                                                            style="width: {{item.value/5*100}}%;" aria-valuenow="50"
-                                                            aria-valuemin="1" aria-valuemax="5"></div>
-                                                    </div>
-                                                </li>
-                                                {% endif %}
-                                                {% endfor %}
-                                            </ul>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        {% for item in mood %}
+                                                        {% if item.name == 'stress' %}
+                                                        <tr>
+                                                            <td width="35%">
+                                                                <span class="badge bg-danger rounded-pill me-2">1</span>
+                                                                Stress
+                                                            </td>
+                                                            <td>
+                                                                <div class="progress" style="height: 20px;">
+                                                                    <div class="progress-bar bg-danger"
+                                                                        role="progressbar"
+                                                                        style="width: {{item.value/5*100}}%;"
+                                                                        aria-valuenow="10" aria-valuemin="1"
+                                                                        aria-valuemax="5"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% elif item.name == 'anxiety' %}
+                                                        <tr>
+                                                            <td>
+                                                                <span
+                                                                    class="badge bg-warning rounded-pill me-2">2</span>
+                                                                Anxiety
+                                                            </td>
+                                                            <td>
+                                                                <div class="progress" style="height: 20px;">
+                                                                    <div class="progress-bar bg-warning"
+                                                                        role="progressbar"
+                                                                        style="width: {{item.value/5*100}}%;"
+                                                                        aria-valuenow="20" aria-valuemin="1"
+                                                                        aria-valuemax="5"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% elif item.name == 'depression' %}
+                                                        <tr>
+                                                            <td>
+                                                                <span class="badge bg-info rounded-pill me-2">3</span>
+                                                                Depression
+                                                            </td>
+                                                            <td>
+                                                                <div class="progress" style="height: 20px;">
+                                                                    <div class="progress-bar bg-info" role="progressbar"
+                                                                        style="width: {{item.value/5*100}}%;"
+                                                                        aria-valuenow="40" aria-valuemin="1"
+                                                                        aria-valuemax="5"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% elif item.name == 'sleep' %}
+                                                        <tr>
+                                                            <td>
+                                                                <span
+                                                                    class="badge bg-primary rounded-pill me-2">4</span>
+                                                                Sleep
+                                                            </td>
+                                                            <td>
+                                                                <div class="progress" style="height: 20px;">
+                                                                    <div class="progress-bar bg-primary"
+                                                                        role="progressbar"
+                                                                        style="width: {{item.value/5*100}}%;"
+                                                                        aria-valuenow="100" aria-valuemin="1"
+                                                                        aria-valuemax="5"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% elif item.name == 'social' %}
+                                                        <tr>
+                                                            <td>
+                                                                <span
+                                                                    class="badge bg-success rounded-pill me-2">5</span>
+                                                                Social
+                                                            </td>
+                                                            <td>
+                                                                <div class="progress" style="height: 20px;">
+                                                                    <div class="progress-bar bg-success"
+                                                                        role="progressbar"
+                                                                        style="width: {{item.value/5*100}}%;"
+                                                                        aria-valuenow="50" aria-valuemin="1"
+                                                                        aria-valuemax="5"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             {% else %}
                                             <a class="btn btn-primary" href="moodRecommendation">Record Today's Mood</a>
                                             {% endif %}
