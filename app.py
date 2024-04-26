@@ -1,6 +1,6 @@
-from flask import Flask, render_template,session, redirect, url_for, request
+from flask import Flask, render_template, session, redirect, url_for, request
 from pymongo import MongoClient
-from datetime import timedelta,datetime
+from datetime import timedelta, datetime
 import datetime
 import math
 import random
@@ -8,7 +8,7 @@ import random
 from register import register_bp
 from login import login_bp
 from journal import journal_bp
-from quotes import quotes 
+from quotes import quotes
 from recommend import recommend_bp
 from appointment import appointment_bp
 from chat import chat_bp
@@ -25,121 +25,155 @@ app.register_blueprint(appointment_bp)
 app.register_blueprint(chat_bp)
 app.register_blueprint(counselor_bp)
 
-app.secret_key = 'secret_key123'
+app.secret_key = "secret_key123"
 
-client = MongoClient('mongodb://localhost:27017/')
-db = client['db_reachOut']
-collection = db['journal']
-appointments_collection = db['appointment']
+client = MongoClient("mongodb://localhost:27017/")
+db = client["db_reachOut"]
+collection = db["journal"]
+appointments_collection = db["appointment"]
+mood_collection = db["mood"]
 
-@app.route('/')
+
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/signin')
+
+@app.route("/signin")
 def signin():
-    message = session.pop('message', None)
-    error = session.pop('error', None)
+    message = session.pop("message", None)
+    error = session.pop("error", None)
     # Render the signin template with the success message
-    return render_template('signin.html', message=message,error=error)
+    return render_template("signin.html", message=message, error=error)
 
-@app.route('/signup')
+
+@app.route("/signup")
 def signup():
-    return render_template('signup.html')
+    return render_template("signup.html")
 
-@app.route('/template')
+
+@app.route("/template")
 def template():
-    return render_template('template.html')
+    return render_template("template.html")
 
-@app.route('/user')
+
+@app.route("/user")
 def user():
-    userName = session.get('name')
-    userEmail = session.get('email')
-    userAge = session.get('age')
-    userID = session.get('uid')
-    userGender = session.get('gender')
-    
-    stress = session.get('stress')
-    anxiety = session.get('anxiety')
-    depression = session.get('depression')
-    sleep = session.get('sleep')
-    social = session.get('social')
-    recommendation = session.get('recommendation')
-    mood = []
-    if stress is not None:
-        mood.append({'name': 'stress', 'value': stress})
-    if anxiety is not None:
-        mood.append({'name': 'anxiety', 'value': anxiety})
-    if depression is not None:
-        mood.append({'name': 'depression', 'value': depression})
-    if sleep is not None:
-        mood.append({'name': 'sleep', 'value': sleep})
-    if social is not None:
-        mood.append({'name': 'social', 'value': social})
-    if recommendation is not None:
-        mood.append({'name': 'recommendation', 'value': recommendation})
+    userName = session.get("name")
+    userEmail = session.get("email")
+    userAge = session.get("age")
+    userID = session.get("uid")
+    userGender = session.get("gender")
 
+    user_id = session.get("uid")
+
+
+    mood_data = mood_collection.find_one({"user_id": user_id})
     
+    mood = []
+    if mood_data:
+        if mood_data.get("stress"):
+            mood.append({"name": "stress", "value": mood_data["stress"]})
+        if mood_data.get("anxiety"):
+            mood.append({"name": "anxiety", "value": mood_data["anxiety"]})
+        if mood_data.get("depression"):
+            mood.append({"name": "depression", "value": mood_data["depression"]})
+        if mood_data.get("sleep"):
+            mood.append({"name": "sleep", "value": mood_data["sleep"]})
+        if mood_data.get("social"):
+            mood.append({"name": "social", "value": mood_data["social"]})
+        if mood_data.get("recommendation"):
+            mood.append({"name": "recommendation", "value": mood_data["recommendation"]})
     
-    success = session.pop('success', None)
-    successAppoin = session.pop('successAppoin', None)
-    user_id = session.get('uid')
-    appointment = appointments_collection.find_one({"user_id": user_id})
-    
-    current_date = datetime.date.today().strftime('%B %d, %Y')
-    query = {'userID': userID, 'date': current_date}
+    if(mood_data):
+        today = datetime.date.today().isoformat()
+        if mood_data["mood_date"] != today:
+            mood = []
+
+    success = session.pop("success", None)
+    successAppoin = session.pop("successAppoin", None)
+    user_id = session.get("uid")
+    appointment = appointments_collection.find_one(
+        {"user_id": user_id, "status": {"$ne": "completed"}}
+    )
+    completed_appointments = appointments_collection.find(
+        {"user_id": user_id, "status": "completed"}
+    )
+
+    current_date = datetime.date.today().strftime("%B %d, %Y")
+    query = {"userID": userID, "date": current_date}
     todayJournal = list(collection.find(query))
 
     if not userName or not userEmail or not userAge:
-        return redirect(url_for('signin'))
+        return redirect(url_for("signin"))
 
     quote = get_quote_for_day()
-    
-    return render_template('user.html', userEmail=userEmail, userName=userName, userAge=userAge,
-                           userID=userID, success=success, todayJournal=todayJournal,
-                           userGender=userGender, quote=quote['quote'], author=quote['author'],mood=mood, successAppoin=successAppoin, appointment=appointment)
-    
+
+    return render_template(
+        "user.html",
+        userEmail=userEmail,
+        userName=userName,
+        userAge=userAge,
+        userID=userID,
+        success=success,
+        todayJournal=todayJournal,
+        userGender=userGender,
+        quote=quote["quote"],
+        author=quote["author"],
+        mood=mood,
+        successAppoin=successAppoin,
+        appointment=appointment,
+        completed_appointments=completed_appointments,
+    )
+
+
 def get_quote_for_day():
     today = datetime.date.today().isoformat()
-    if 'quote_date' not in session or session['quote_date'] != today:
+    if "quote_date" not in session or session["quote_date"] != today:
         random_quote = random.choice(quotes)
-        session['quote'] = random_quote
-        session['quote_date'] = today
-    return session['quote']
+        session["quote"] = random_quote
+        session["quote_date"] = today
+    return session["quote"]
 
-@app.route('/get_entries', methods=['GET'])
+
+@app.route("/get_entries", methods=["GET"])
 def get_entries():
-    userID = session.get('uid')
-    page = request.args.get('page', 1, type=int)
+    userID = session.get("uid")
+    page = request.args.get("page", 1, type=int)
     page_size = 5  # Number of entries per page
 
-    total_entries = collection.count_documents({'userID': userID})
+    total_entries = collection.count_documents({"userID": userID})
     skip_count = (page - 1) * page_size
-    entries = list(collection.find({'userID': userID}).skip(skip_count).limit(page_size))
+    entries = list(
+        collection.find({"userID": userID}).skip(skip_count).limit(page_size)
+    )
 
     # Render the entries as HTML
-    entries_html = render_template('_entries.html', entries=entries)
+    entries_html = render_template("_entries.html", entries=entries)
 
-    return ({
-        'entries_html': entries_html,
-        'total_pages': math.ceil(total_entries / page_size)
-    })
-    
-@app.route('/logout')
+    return {
+        "entries_html": entries_html,
+        "total_pages": math.ceil(total_entries / page_size),
+    }
+
+
+@app.route("/logout")
 def logout():
     # Clear session data
-    session.pop('name', None)
-    session.pop('email', None)
-    session.pop('gender', None)
-    session.pop('uid', None)
-    session.pop('age', None)
+    session.pop("name", None)
+    session.pop("email", None)
+    session.pop("gender", None)
+    session.pop("uid", None)
+    session.pop("age", None)
     # Redirect to the sign-in page
-    return redirect(url_for('signin'))  # Assuming your sign-in route is named 'signin'
+    return redirect(url_for("signin"))  # Assuming your sign-in route is named 'signin'
 
-@app.route('/moodRecommendation')
+
+@app.route("/moodRecommendation")
 def moodRecommendation():
-    userName = session.get('name')
-    return render_template('recommend.html', userName=userName)
+    userName = session.get("name")
+    return render_template("recommend.html", userName=userName)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)

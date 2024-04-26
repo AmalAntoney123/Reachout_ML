@@ -25,7 +25,17 @@ def get_pending_appointments():
 @counselor_bp.route("/counselor")
 def counselor():
     pending_appointments = get_pending_appointments()
-    return render_template("counsellor.html", pending_appointments=pending_appointments)
+    confirmed_appointments = get_confirmed_appointments()
+    completed_appointments = list(appointments_collection.find({"status": "completed"}))
+    completed_appointments_count = len(completed_appointments)
+
+    return render_template(
+        "counsellor.html",
+        pending_appointments=pending_appointments,
+        confirmed_appointments=confirmed_appointments,
+        completed_appointments=completed_appointments,
+        completed_appointments_count=completed_appointments_count,
+    )
 
 
 @counselor_bp.route("/get_available_slots", methods=["POST"])
@@ -110,9 +120,12 @@ def get_available_slots():
         current_date += timedelta(days=1)
 
     # Sort the available slots in chronological order
-    available_slots_week.sort(key=lambda x: datetime.strptime(x["start"], "%m/%d/%Y %I:%M %p"))
+    available_slots_week.sort(
+        key=lambda x: datetime.strptime(x["start"], "%m/%d/%Y %I:%M %p")
+    )
 
     return jsonify(available_slots_week)
+
 
 @counselor_bp.route("/update_appointment", methods=["POST"])
 def update_appointment():
@@ -150,4 +163,39 @@ def update_appointment():
     except Exception as e:
         print(f"Error updating appointment: {e}")
         print(traceback.format_exc())
+        return jsonify({"error": str(e)}), 500
+
+
+def get_confirmed_appointments():
+    confirmed_appointments = appointments_collection.find({"status": "confirmed"})
+    return list(confirmed_appointments)
+
+
+@counselor_bp.route("/save_report", methods=["POST"])
+def save_report():
+    appointment_id = request.form.get("appointment_id")
+    private_notes = request.form.get("private_notes")
+    student_notes = request.form.get("student_notes")
+
+    # Check if appointment_id is valid
+    if not appointment_id or not ObjectId.is_valid(appointment_id):
+        print(f"Invalid appointment_id: {appointment_id}")
+        return jsonify({"error": "Invalid appointment ID"}), 400
+
+    try:
+        # Update the appointment in the database with the notes
+        result = appointments_collection.update_one(
+            {"_id": ObjectId(appointment_id)},
+            {
+                "$set": {
+                    "private_notes": private_notes,
+                    "student_notes": student_notes,
+                    "status": "completed",
+                }
+            },
+        )
+
+        return jsonify({"success": True})
+    except Exception as e:
+        print(f"Error saving report: {e}")
         return jsonify({"error": str(e)}), 500

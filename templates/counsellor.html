@@ -19,6 +19,21 @@
 
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/eliyantosarage/font-awesome-pro@main/fontawesome-pro-6.5.1-web/css/all.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('#completedAppointmentsTable').DataTable();
+            $('#confirmTable').DataTable();
+        });
+    </script>
     <style>
         .btn-primary {
             width: 100%;
@@ -113,7 +128,7 @@
                             <li class="list-group-item">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h5>{{ appointment.name }}</h5>
+                                        <h5>Student Name: {{ appointment.name }}</h5>
                                         <p>{{ appointment.email }}</p>
                                         <p>Reason: {{ appointment.reason }}</p>
                                     </div>
@@ -125,9 +140,80 @@
                             {% endfor %}
                         </ul>
                     </div>
+                    <div class="tab-pane fade" id="confirmed" role="tabpanel" aria-labelledby="confirmed-tab">
+                        <h4 class="my-4">Confirmed Appointments</h4>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <table border="1" class="table table-striped" id="confirmTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Student Name</th>
+                                            <th>Email</th>
+                                            <th>Reason</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for appointment in confirmed_appointments %}
+                                        <tr>
+                                            <td>{{ appointment.name }}</td>
+                                            <td>{{ appointment.email }}</td>
+                                            <td>{{ appointment.reason }}</td>
+                                            <td>{{ appointment.AppDate.strftime('%Y-%m-%d %H:%M') }}</td>
+                                            <td>{{ appointment.AppEndDate.strftime('%Y-%m-%d %H:%M') }}</td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm reportModalBtn"
+                                                    data-toggle="modal" data-target="#reportModal"
+                                                    data-appointment-id="{{ appointment._id }}">Enter Report</button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                        <h4 class="my-4">Completed Appointments</h4>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <table border="1" id="completedAppointmentsTable" class="table table-striped"
+                                    style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Student Name</th>
+                                            <th>Email</th>
+                                            <th>Reason</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                            <th>Private Notes</th>
+                                            <th>Student Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for appointment in completed_appointments %}
+                                        <tr>
+                                            <td>{{ appointment.name }}</td>
+                                            <td>{{ appointment.email }}</td>
+                                            <td>{{ appointment.reason }}</td>
+                                            <td>{{ appointment.AppDate.strftime('%Y-%m-%d %H:%M') }}</td>
+                                            <td>{{ appointment.AppEndDate.strftime('%Y-%m-%d %H:%M') }}</td>
+                                            <td>{{ appointment.private_notes }}</td>
+                                            <td>{{ appointment.student_notes }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
+    </div>
     </div>
     <script>
         $(document).ready(function () {
@@ -244,6 +330,42 @@
             }
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            $('.reportModalBtn').click(function (event) {
+                var button = $(this); // Get the clicked button
+                var appointmentId = button.data('appointment-id'); // Extract appointment ID from data-* attribute
+                $('#reportModal').modal('show');
+                $('#appointmentIdInput').val(appointmentId); // Set the appointment ID in the hidden input field
+            });
+
+            $('#saveReport').click(function () {
+                var appointmentId = $('#appointmentIdInput').val();
+                var privateNotes = $('#privateNotes').val();
+                var studentNotes = $('#studentNotes').val();
+
+                // Send an AJAX request to update the appointment with the notes
+                $.ajax({
+                    url: '/save_report',
+                    type: 'POST',
+                    data: {
+                        appointment_id: appointmentId,
+                        private_notes: privateNotes,
+                        student_notes: studentNotes
+                    },
+                    success: function (response) {
+                        alert('Report saved successfully!');
+                        $('#reportModal').modal('hide');
+                        location.reload(); // Reload the page after saving the report
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+
     <!-- footer section start -->
     <div class="footer_section layout_padding" id="contact">
         <div class="container">
@@ -296,6 +418,48 @@
         </div>
     </div>
     <!-- footer section end -->
+
+    <!-- Report Modal -->
+    <!-- Report Modal -->
+    <style>
+
+    </style>
+    <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="reportModalLabel">Enter Report</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="appointmentIdInput">
+                        <div class="form-group">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="privateNotes" rows="3"
+                                    placeholder="Enter private notes" style="height:200px"></textarea>
+                                <label for="privateNotes">Private Notes</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="studentNotes" rows="3"
+                                    placeholder="Enter notes for student" style="height:150px"></textarea>
+                                <label for="studentNotes">Notes for Student</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveReport">Save Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- copyright section start -->

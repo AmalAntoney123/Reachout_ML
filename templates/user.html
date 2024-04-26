@@ -533,14 +533,38 @@
                     </div>
 
                     <!-- Appointment tab -->
-                    <div class="tab-pane fade" style="height:600px" id="appointments" role="tabpanel"
-                        aria-labelledby="appointments-tab">
+                    <div class="tab-pane fade" id="appointments" role="tabpanel" aria-labelledby="appointments-tab">
                         <h2>Appointments</h2>
+
+                        {% if not appointment %}
+                        <div class="card m-4 mb-5">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="card-title m-0">New Appointment</h4>
+                            </div>
+                            <form action="bookAppointment" method="POST">
+                                <div class="card-body">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a comment here" id="reason"
+                                            name="reason" style="height: 150px" required></textarea>
+                                        <label for="reason">Reason for Appointment</label>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary mt-2" style="width:20%">Book
+                                        Appointment</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+
                         {% if appointment %}
                         <div class="card m-4 mb-5 pb-5">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h4 class="card-title m-0">Current Appointment</h4>
-                                <a href="cancelAppointment" class="btn btn-danger btn-sm">Cancel</a>
+                                <form action="cancelAppointment" method="POST">
+                                    <input type="hidden" name="appointment_id" value="{{ appointment._id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                </form>
                             </div>
                             <div class="card-body">
                                 <p><strong>Reason:</strong> {{ appointment.reason }}</p>
@@ -548,25 +572,89 @@
                                 {% if appointment.status == 'pending' %}
                                 <p>Your appointment request is pending approval. Please wait for confirmation.</p>
                                 {% elif appointment.status == 'confirmed' %}
-                                <p>Your appointment has been confirmed. Details will be shared with you shortly.</p>
+                                <p>Your appointment has been confirmed for {{ appointment.AppDate.strftime('%B %d, %Y,
+                                    %I:%M %p') }}.</p>
                                 {% elif appointment.status == 'completed' %}
                                 <p>Your appointment has been completed.</p>
                                 {% endif %}
                             </div>
                         </div>
-                        {% else %}
-                        <form action="bookAppointment" method="POST">
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="reason"
-                                    name="reason" style="height: 150px" required></textarea>
-                                <label for="reason">Reason for Appointment</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-2">Book Appointment</button>
-                        </form>
-
-
                         {% endif %}
+
+                        <!-- Table for completed appointments -->
+                        <div class="card m-4 mb-5 pb-5">
+                            <div class="card-header">
+                                <h4 class="card-title">Previous Appointments</h4>
+                            </div>
+                            <div class="card-body">
+                                {% if completed_appointments%}
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Reason</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for completed_appointment in completed_appointments %}
+                                        <tr>
+                                            <td>{{ completed_appointment.AppDate.strftime('%B %d, %Y, %I:%M %p') }}</td>
+                                            <td>{{ completed_appointment.reason }}</td>
+                                            <td>
+                                                <form action="generateReport" method="POST">
+                                                    <input type="hidden" name="appointment_id"
+                                                        value="{{ completed_appointment._id }}">
+                                                    <button type="button" class="btn btn-primary btn-sm reportModalBtn"
+                                                        data-toggle="modal" data-target="#reportModal"
+                                                        data-student-notes="{{ completed_appointment.student_notes }}">View
+                                                        Report</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <!-- Report Modal -->
+                                <div class="modal fade" id="reportModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="reportModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="reportModalLabel">Counsellor Report</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p id="reportContent"></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    $('.reportModalBtn').click(function (event) {
+                                        var button = $(event.currentTarget); // Button that triggered the modal
+                                        var studentNotes = button.data('student-notes'); // Retrieve the student notes data
+                                        console.log(studentNotes)
+                                        var modalBody = $(this).find('.modal-body');
+                                        $('#reportContent').html(studentNotes);
+                                        $('#reportModal').modal('show');
+                                    });
+                                </script>
+                                {% else %}
+                                <p>No completed appointments found.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
                     </div>
+
                     <!-- journal add modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalLabel" aria-hidden="true">
