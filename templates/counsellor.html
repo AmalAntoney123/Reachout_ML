@@ -134,7 +134,6 @@
             $('.allocate-time-slot').click(function () {
                 var appointmentId = $(this).data('appointment-id');
                 var timeSlotsContainer = $(this).closest('li').find('.time-slots-container');
-
                 $.ajax({
                     url: '/get_available_slots',
                     type: 'POST',
@@ -142,26 +141,84 @@
                     success: function (response) {
                         timeSlotsContainer.empty();
                         if (response.length > 0) {
-                            timeSlotsContainer.show();
+                            // Group time slots by date
+                            var slotsByDate = {};
                             $.each(response, function (index, slot) {
-                                var slotStartDateTime = new Date(slot.start);
-                                var slotEndDateTime = new Date(slot.end);
-
-                                // Create a new Date object with the correct time zone offset
-                                var localSlotStartDateTime = new Date(
-                                    slotStartDateTime.getFullYear(),
-                                    slotStartDateTime.getMonth(),
-                                    slotStartDateTime.getDate(),
-                                    slotStartDateTime.getHours(),
-                                    slotStartDateTime.getMinutes(),
-                                    slotStartDateTime.getSeconds()
-                                );
-
-                                var slotButton = $('<button>').addClass('btn btn-outline-primary m-1').text(`${localSlotStartDateTime.toLocaleString()} - ${slotEndDateTime.toLocaleString()}`).click(function () {
-                                    updateAppointment(appointmentId, localSlotStartDateTime);
-                                });
-                                timeSlotsContainer.append(slotButton);
+                                var slotStartDate = new Date(slot.start).toLocaleDateString();
+                                if (!slotsByDate[slotStartDate]) {
+                                    slotsByDate[slotStartDate] = [];
+                                }
+                                slotsByDate[slotStartDate].push(slot);
                             });
+
+                            var sortedSlotsByDate = Object.entries(slotsByDate);
+
+                            // Sort the dates
+                            var sortedDates = sortedSlotsByDate.map(([date]) => date);
+
+                            // Create a container for the date navigation buttons
+                            var dateNavigationContainer = $('<div>').addClass('d-flex justify-content-between mb-3');
+                            var prevDateButton = $('<button>').addClass('btn btn-outline-primary').text('Previous Date');
+                            var nextDateButton = $('<button>').addClass('btn btn-outline-primary').text('Next Date');
+                            dateNavigationContainer.append(prevDateButton, nextDateButton);
+                            timeSlotsContainer.append(dateNavigationContainer);
+
+                            // Keep track of the current date index
+                            var currentDateIndex = 0;
+
+                            // Function to display the time slots for a given date
+                            function displayTimeSlots(dateIndex) {
+                                timeSlotsContainer.find('.card').remove();
+                                var date = sortedDates[dateIndex];
+                                var slots = slotsByDate[date];
+                                var card = $('<div>').addClass('card mb-3');
+                                var cardHeader = $('<div>').addClass('card-header').text(date);
+                                var cardBody = $('<div>').addClass('card-body');
+                                card.append(cardHeader, cardBody);
+
+                                // Create time slot buttons inside the card body
+                                $.each(slots, function (index, slot) {
+                                    var slotStartDateTime = new Date(slot.start);
+                                    var slotEndDateTime = new Date(slot.end);
+                                    var localSlotStartDateTime = new Date(
+                                        slotStartDateTime.getFullYear(),
+                                        slotStartDateTime.getMonth(),
+                                        slotStartDateTime.getDate(),
+                                        slotStartDateTime.getHours(),
+                                        slotStartDateTime.getMinutes(),
+                                        slotStartDateTime.getSeconds()
+                                    );
+                                    var slotButton = $('<button>')
+                                        .addClass('btn btn-outline-primary m-1')
+                                        .text(`${localSlotStartDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${slotEndDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+                                        .click(function () {
+                                            updateAppointment(appointmentId, localSlotStartDateTime);
+                                        });
+                                    cardBody.append(slotButton);
+                                });
+
+                                timeSlotsContainer.append(card);
+                            }
+
+                            // Display the time slots for the first date
+                            displayTimeSlots(currentDateIndex);
+
+                            // Event handlers for the date navigation buttons
+                            prevDateButton.click(function () {
+                                if (currentDateIndex > 0) {
+                                    currentDateIndex--;
+                                    displayTimeSlots(currentDateIndex);
+                                }
+                            });
+
+                            nextDateButton.click(function () {
+                                if (currentDateIndex < sortedDates.length - 1) {
+                                    currentDateIndex++;
+                                    displayTimeSlots(currentDateIndex);
+                                }
+                            });
+
+                            timeSlotsContainer.show();
                         } else {
                             timeSlotsContainer.hide();
                             alert('No available time slots for the current day.');

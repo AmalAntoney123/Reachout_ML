@@ -3,6 +3,8 @@ from pymongo import MongoClient
 from datetime import datetime, time, timedelta
 from bson.objectid import ObjectId
 import traceback
+from collections import OrderedDict
+from calendar import month_abbr
 
 counselor_bp = Blueprint(
     "counselor",
@@ -31,17 +33,22 @@ def get_available_slots():
     # Get the current date
     today = datetime.now().date()
 
-    # Get the start and end dates for the week
-    start_date = today - timedelta(days=today.weekday())
+    # Get the start date (tomorrow)
+    start_date = today + timedelta(days=1)
+
+    # Adjust the start date to the next Monday if it's a weekend
+    while start_date.weekday() > 4:  # Weekday > 4 means it's Saturday or Sunday
+        start_date += timedelta(days=1)
+
+    # Get the end date (7 weekdays from the start date)
     end_date = start_date + timedelta(days=6)
 
-    # Initialize an empty list to store available slots for the week
+    # Initialize an empty list to store available slots for the next 7 weekdays
     available_slots_week = []
 
-    # Loop through each day of the week
-    for day in range((end_date - start_date).days + 1):
-        current_date = start_date + timedelta(days=day)
-
+    # Loop through the next 7 weekdays
+    current_date = start_date
+    while current_date <= end_date:
         # Get the list of confirmed appointments for the current day
         confirmed_appointments = appointments_collection.find(
             {
@@ -89,15 +96,23 @@ def get_available_slots():
                 ]
             ):
                 available_slots.append(
-                    {"start": slot_start.isoformat(), "end": slot_end.isoformat()}
+                    {
+                        "start": f"{slot_start.strftime('%m/%d/%Y %I:%M %p')}",
+                        "end": f"{slot_end.strftime('%m/%d/%Y %I:%M %p')}",
+                    }
                 )
             current_time += timedelta(hours=2)
 
         # Add the available slots for the current day to the list for the week
         available_slots_week.extend(available_slots)
 
-    return jsonify(available_slots_week)
+        # Move to the next weekday
+        current_date += timedelta(days=1)
 
+    # Sort the available slots in chronological order
+    available_slots_week.sort(key=lambda x: datetime.strptime(x["start"], "%m/%d/%Y %I:%M %p"))
+
+    return jsonify(available_slots_week)
 
 @counselor_bp.route("/update_appointment", methods=["POST"])
 def update_appointment():
