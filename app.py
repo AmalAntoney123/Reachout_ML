@@ -11,6 +11,7 @@ from journal import journal_bp
 from quotes import quotes 
 from recommend import recommend_bp
 from appointment import appointment_bp
+from chat import chat_bp
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.register_blueprint(login_bp)
 app.register_blueprint(journal_bp)
 app.register_blueprint(recommend_bp)
 app.register_blueprint(appointment_bp)
+app.register_blueprint(chat_bp)
 
 app.secret_key = 'secret_key123'
 

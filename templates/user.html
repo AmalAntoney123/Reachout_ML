@@ -533,7 +533,8 @@
                     </div>
 
                     <!-- Appointment tab -->
-                    <div class="tab-pane fade" style="height:600px" id="appointments" role="tabpanel" aria-labelledby="appointments-tab">
+                    <div class="tab-pane fade" style="height:600px" id="appointments" role="tabpanel"
+                        aria-labelledby="appointments-tab">
                         <h2>Appointments</h2>
                         {% if appointment %}
                         <div class="card m-4 mb-5 pb-5">
@@ -663,6 +664,8 @@
         </div>
     </div>
     <!-- footer section end -->
+
+
     <!-- copyright section start -->
     <div class="copyright_section">
         <div class="container">
@@ -670,6 +673,56 @@
         </div>
     </div>
 
+    <style>
+        .btn-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .tooltip {
+            font-family: 'Roboto', sans-serif;
+            /* Use a modern font */
+            font-size: 14px;
+            background-color: #333;
+            /* Dark background color */
+            color: #fff;
+            /* White text color */
+            border-radius: 4px;
+            /* Rounded corners */
+            padding: 8px 12px;
+            /* Some padding for spacing */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            /* Add a subtle shadow */
+            opacity: 0.9;
+            /* Make the tooltip slightly transparent */
+        }
+
+        .tooltip .tooltip-arrow {
+            border-left-color: #333;
+            /* Match the tooltip background color */
+        }
+
+        .tooltip.bs-tooltip-left .tooltip-arrow {
+            border-right-color: #333;
+            /* Match the tooltip background color */
+        }
+    </style>
+    <!-- AI Chat Button -->
+    <div class="btn-chat">
+        <a href="/chat" class="btn btn-primary rounded-circle p-3" data-bs-toggle="tooltip" data-bs-placement="left"
+            title="AI Chat">
+            <i class="fas fa-comment-dots fa-lg"></i>
+        </a>
+    </div>
+
+    <!-- Existing JavaScript -->
+    <script>
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
 
     <!-- Custom JavaScript -->
     <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script>
