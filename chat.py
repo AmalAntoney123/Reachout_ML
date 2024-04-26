@@ -1,19 +1,19 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, Blueprint
 import time
 import openai
 from openai import OpenAI
 
 
-app = Flask(__name__)
+chat_bp = Blueprint('chat',__name__)
 
 # Global variable to store the thread ID
 thread_id = None
 
-@app.route("/")
+@chat_bp.route("/chat")
 def index():
     return render_template('chat.html')
 
-@app.route("/get", methods=["GET", "POST"])
+@chat_bp.route("/get", methods=["GET", "POST"])
 def chat():
     global thread_id
     msg = request.form["msg"]
@@ -63,6 +63,3 @@ def get_chat_response(text):
     response = latest_message.content[0].text.value
 
     return response
-
-if __name__ == '__main__':
-    app.run()
