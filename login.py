@@ -27,6 +27,9 @@ def login():
                 session['age'] = user['age']
                 session['gender'] = user['gender']
                 session['uid'] = str(user['_id'])
+                
+                if (session.get('name') == "counselor"):
+                    return redirect(url_for('counselor.counselor'))
                 # Redirect to the home page after login
                 return redirect(url_for('user'))
             else:

@@ -11,6 +11,9 @@ db = client['db_reachOut']
 appointments_collection = db['appointment']
 
 
+
+
+
 @appointment_bp.route("/bookAppointment", methods=["POST"])
 def bookAppointment():
     user_id = session.get('uid')
@@ -41,3 +44,4 @@ def cancelAppointment():
     user_id = session.get('uid')
     appointments_collection.delete_one({"user_id": user_id})
     return redirect(url_for("user"))
+

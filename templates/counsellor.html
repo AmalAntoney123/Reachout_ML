@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reach Out Student Mental Health Support</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='images/fevicon.png') }}" type="image/gif" />
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/eliyantosarage/font-awesome-pro@main/fontawesome-pro-6.5.1-web/css/all.min.css">
+    <style>
+        .btn-primary {
+            width: 100%;
+            color: #ffffff;
+            background-color: #19e9d9;
+            text-align: center;
+            padding: 7px 0px;
+            border: 0;
+        }
+
+        .btn-primary:hover {
+            width: 100%;
+            color: #ffffff;
+            background-color: #45b9af;
+            text-align: center;
+            padding: 7px 0px;
+            border: 0;
+        }
+
+        .sidebar {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .tab-content {
+            padding: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="header_section">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href=".">
+                    <h2><b>Reach Out</b></h2>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user" aria-hidden="true"></i> Counselor
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="user">Profile</a></li>
+                                <li><a class="dropdown-item" href="counselor">Counselor Panel</a></li>
+                                <li><a class="dropdown-item" href=".">Home</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 sidebar">
+                <h4 class="my-4">Appointments</h4>
+                <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pending-tab" data-toggle="tab" href="#pending" role="tab"
+                            aria-controls="pending" aria-selected="true">Pending Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="confirmed-tab" data-toggle="tab" href="#confirmed" role="tab"
+                            aria-controls="confirmed" aria-selected="false">Confirmed Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="completed-tab" data-toggle="tab" href="#completed" role="tab"
+                            aria-controls="completed" aria-selected="false">Completed Appointments</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-9 bg-white">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                        <h4 class="my-4">Pending Appointments</h4>
+                        <ul class="list-group">
+                            {% for appointment in pending_appointments %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>{{ appointment.name }}</h5>
+                                        <p>{{ appointment.email }}</p>
+                                        <p>Reason: {{ appointment.reason }}</p>
+                                    </div>
+                                    <button class="btn btn-primary p-2 allocate-time-slot" style="width:40%"
+                                        data-appointment-id="{{ appointment._id }}">Allocate Time Slot</button>
+                                </div>
+                                <div class="time-slots-container" style="display: none;"></div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.allocate-time-slot').click(function () {
+                var appointmentId = $(this).data('appointment-id');
+                var timeSlotsContainer = $(this).closest('li').find('.time-slots-container');
+
+                $.ajax({
+                    url: '/get_available_slots',
+                    type: 'POST',
+                    data: { appointment_id: appointmentId },
+                    success: function (response) {
+                        timeSlotsContainer.empty();
+                        if (response.length > 0) {
+                            timeSlotsContainer.show();
+                            $.each(response, function (index, slot) {
+                                var slotStartDateTime = new Date(slot.start);
+                                var slotEndDateTime = new Date(slot.end);
+
+                                // Create a new Date object with the correct time zone offset
+                                var localSlotStartDateTime = new Date(
+                                    slotStartDateTime.getFullYear(),
+                                    slotStartDateTime.getMonth(),
+                                    slotStartDateTime.getDate(),
+                                    slotStartDateTime.getHours(),
+                                    slotStartDateTime.getMinutes(),
+                                    slotStartDateTime.getSeconds()
+                                );
+
+                                var slotButton = $('<button>').addClass('btn btn-outline-primary m-1').text(`${localSlotStartDateTime.toLocaleString()} - ${slotEndDateTime.toLocaleString()}`).click(function () {
+                                    updateAppointment(appointmentId, localSlotStartDateTime);
+                                });
+                                timeSlotsContainer.append(slotButton);
+                            });
+                        } else {
+                            timeSlotsContainer.hide();
+                            alert('No available time slots for the current day.');
+                        }
+                    }
+                });
+            });
+
+            function updateAppointment(appointmentId, slotStartDateTime) {
+                const slotStartDatetimeStr = slotStartDateTime.toISOString();
+                $.ajax({
+                    url: '/update_appointment',
+                    type: 'POST',
+                    data: { appointment_id: appointmentId, slot_start_datetime: slotStartDatetimeStr },
+                    success: function (response) {
+                        alert('Appointment updated successfully!');
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
+    <!-- footer section start -->
+    <div class="footer_section layout_padding" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Contact Us</h1>
+                    <div class="map_icon"><img src="{{ url_for('static', filename='images/map-icon.png') }}"><span
+                            class="paddlin_left_0">University Campus, Main Rd.</span></div>
+                    <div class="map_icon"><img src="{{ url_for('static', filename='images/call-icon.png') }}"><span
+                            class="paddlin_left_0">+1 (555) 123-4567</span></div>
+                    <div class="map_icon"><img src="{{ url_for('static', filename='images/mail-icon.png') }}"><span
+                            class="paddlin_left_0">support@Reach Out.edu</span></div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Resources</h1>
+                    <div class="hiphop_text_1">Explore our comprehensive collection of mental health resources,
+                        including articles, videos, and self-care activities designed to support your well-being.
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Useful Links</h1>
+                    <div class="Useful_text">
+                        <ul>
+                            <li><a href="#" style="color:white!important">About Us</a></li>
+                            <li><a href="#" style="color:white!important">Join Now</a></li>
+                            <li><a href="#" style="color:white!important">Privacy Policy</a></li>
+                            <li><a href="#" style="color:white!important">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Newsletter</h1>
+                    <input type="text" class="Enter_text" placeholder="Enter your Email" name="Enter your Email">
+                    <div class="subscribe_bt"><a href="#">Subscribe</a></div>
+                    <div class="social_icon">
+                        <ul>
+                            <li><a href="#"><img src="{{ url_for('static', filename='images/fb-icon.png') }}"></a>
+                            </li>
+                            <li><a href="#"><img src="{{ url_for('static', filename='images/twitter-icon.png') }}"></a>
+                            </li>
+                            <li><a href="#"><img src="{{ url_for('static', filename='images/linkedin-icon.png') }}"></a>
+                            </li>
+                            <li><a href="#"><img
+                                        src="{{ url_for('static', filename='images/instagram-icon.png') }}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- footer section end -->
+
+
+    <!-- copyright section start -->
+    <div class="copyright_section">
+        <div class="container">
+            <p class="copyright_text">2019 All Rights Reserved. Design by <a href="#">Reach Out</a></p>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('#myTab a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

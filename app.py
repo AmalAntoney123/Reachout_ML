@@ -12,6 +12,7 @@ from quotes import quotes
 from recommend import recommend_bp
 from appointment import appointment_bp
 from chat import chat_bp
+from counselor import counselor_bp
 
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ app.register_blueprint(journal_bp)
 app.register_blueprint(recommend_bp)
 app.register_blueprint(appointment_bp)
 app.register_blueprint(chat_bp)
+app.register_blueprint(counselor_bp)
 
 app.secret_key = 'secret_key123'
 
@@ -92,7 +94,7 @@ def user():
         return redirect(url_for('signin'))
 
     quote = get_quote_for_day()
-
+    
     return render_template('user.html', userEmail=userEmail, userName=userName, userAge=userAge,
                            userID=userID, success=success, todayJournal=todayJournal,
                            userGender=userGender, quote=quote['quote'], author=quote['author'],mood=mood, successAppoin=successAppoin, appointment=appointment)
