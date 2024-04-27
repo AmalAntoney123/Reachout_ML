@@ -185,6 +185,13 @@ def moodRecommendation():
     userName = session.get("name")
     return render_template("recommend.html", userName=userName)
 
+@app.route("/moodReset")
+def moodReset():
+    user_id = session.get("uid")
+    mood = []
+    mood_collection.delete_one({"user_id": user_id})
+    return redirect(url_for("user"))
+
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
     feedback_data = request.get_json()

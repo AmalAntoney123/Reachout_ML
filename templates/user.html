@@ -857,6 +857,7 @@
                             $('#feedbackText').val('');
                             $('.rating .star').removeClass('selected');
                             $('.feedback').html('<p>Thank you for your feedback!</p>');
+                            location.reload();
                         },
                         error: function (xhr, status, error) {
                             // Handle the error

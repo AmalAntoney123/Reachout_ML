@@ -29,7 +29,8 @@ def register():
             'gender': gender,
             'email': email,
             'password': hashed_password,
-            'year_of_study': year_of_study
+            'year_of_study': year_of_study,
+            'is_enabled': True
         }
         collection.insert_one(user_data)
 
