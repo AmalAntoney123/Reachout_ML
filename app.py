@@ -35,6 +35,7 @@ collection = db["journal"]
 appointments_collection = db["appointment"]
 mood_collection = db["mood"]
 users_collection = db["users"]
+feedback_collection = db["feedback"]
 
 
 @app.route("/")
@@ -114,6 +115,8 @@ def user():
 
     quote = get_quote_for_day()
 
+    has_feedback = feedback_collection.count_documents({"user_id": user_id}) > 0
+
     return render_template(
         "user.html",
         userEmail=userEmail,
@@ -129,6 +132,7 @@ def user():
         successAppoin=successAppoin,
         appointment=appointment,
         completed_appointments=completed_appointments,
+        has_feedback=has_feedback,
     )
 
 
@@ -171,6 +175,7 @@ def logout():
     session.pop("uid", None)
     session.pop("age", None)
     session.pop("counsellor", None)
+    session.pop("admin", None)
     # Redirect to the sign-in page
     return redirect(url_for("signin"))  # Assuming your sign-in route is named 'signin'
 
@@ -180,6 +185,23 @@ def moodRecommendation():
     userName = session.get("name")
     return render_template("recommend.html", userName=userName)
 
-
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    feedback_data = request.get_json()
+    rating = feedback_data.get('rating')
+    feedback_text = feedback_data.get('feedback')
+    user_id = session.get('uid')  # Assuming you have a session variable storing the user ID
+    print(rating,",",feedback_text,",",user_id)
+    if rating and feedback_text and user_id:
+        feedback_doc = {
+            'user_id': user_id,
+            'rating': rating,
+            'feedback': feedback_text,
+        }
+        feedback_collection.insert_one(feedback_doc)
+        return jsonify({'message': 'Feedback submitted successfully.'}), 200
+    else:
+        return jsonify({'error': 'Invalid feedback data.'}), 400
+    
 if __name__ == "__main__":
     app.run(debug=True)

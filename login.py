@@ -33,6 +33,7 @@ def login():
                         session['counsellor'] = True
                         return redirect(url_for('counselor.counselor'))
                     if (session.get('name') == "admin"):
+                        session['admin'] = True
                         return redirect(url_for('admin.admin'))
                     # Redirect to the home page after login
                     return redirect(url_for('user'))

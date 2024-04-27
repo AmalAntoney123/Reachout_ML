@@ -69,9 +69,9 @@
         </nav>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid bg-white">
         <div class="row">
-            <div class="col-md-3 sidebar">
+            <div class="col-md-3 sidebar" style="background-color: #f8f9fa;">
                 <h4 class="my-4">Admin Panel</h4>
                 <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
                     <li class="nav-item">
@@ -84,7 +84,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-9 bg-white">
+            <div class="col-md-9">
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
                         <h4 class="my-4">Users</h4>
@@ -157,6 +157,7 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Email</th>
+                                            <th>Rating</th>
                                             <th>Feedback</th>
                                         </tr>
                                     </thead>
@@ -165,6 +166,7 @@
                                         <tr>
                                             <td>{{ feedback.name }}</td>
                                             <td>{{ feedback.email }}</td>
+                                            <td>{{ feedback.rating }}</td>
                                             <td>{{ feedback.feedback }}</td>
                                         </tr>
                                         {% endfor %}
@@ -178,8 +180,58 @@
         </div>
     </div>
 
-    <!-- Footer section (same as the provided code) -->
-    <!-- ... -->
+    <!-- footer section start -->
+    <div class="footer_section layout_padding" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Contact Us</h1>
+                    <div class="map_icon"><img src="{{ url_for('static', filename='images/map-icon.png') }}"><span
+                            class="paddlin_left_0">University Campus, Main Rd.</span></div>
+                    <div class="map_icon"><img src="{{ url_for('static', filename='images/call-icon.png') }}"><span
+                            class="paddlin_left_0">+1 (555) 123-4567</span></div>
+                    <div class="map_icon"><img src="{{ url_for('static', filename='images/mail-icon.png') }}"><span
+                            class="paddlin_left_0">support@Reach Out.edu</span></div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Resources</h1>
+                    <div class="hiphop_text_1">Explore our comprehensive collection of mental health resources,
+                        including articles, videos, and self-care activities designed to support your well-being.
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Useful Links</h1>
+                    <div class="Useful_text">
+                        <ul>
+                            <li><a href="#" style="color:white!important">About Us</a></li>
+                            <li><a href="#" style="color:white!important">Join Now</a></li>
+                            <li><a href="#" style="color:white!important">Privacy Policy</a></li>
+                            <li><a href="#" style="color:white!important">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <h1 class="adderss_text">Newsletter</h1>
+                    <input type="text" class="Enter_text" placeholder="Enter your Email" name="Enter your Email">
+                    <div class="subscribe_bt"><a href="#">Subscribe</a></div>
+                    <div class="social_icon">
+                        <ul>
+                            <li><a href="#"><img src="{{ url_for('static', filename='images/fb-icon.png') }}"></a>
+                            </li>
+                            <li><a href="#"><img src="{{ url_for('static', filename='images/twitter-icon.png') }}"></a>
+                            </li>
+                            <li><a href="#"><img src="{{ url_for('static', filename='images/linkedin-icon.png') }}"></a>
+                            </li>
+                            <li><a href="#"><img
+                                        src="{{ url_for('static', filename='images/instagram-icon.png') }}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- footer section end -->
 
     <script>
         $(function () {
