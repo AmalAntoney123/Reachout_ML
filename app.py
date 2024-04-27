@@ -1,9 +1,10 @@
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, render_template, session, redirect, url_for, request, jsonify
 from pymongo import MongoClient
 from datetime import timedelta, datetime
 import datetime
 import math
 import random
+from bson.objectid import ObjectId
 
 from register import register_bp
 from login import login_bp
@@ -13,7 +14,7 @@ from recommend import recommend_bp
 from appointment import appointment_bp
 from chat import chat_bp
 from counselor import counselor_bp
-
+from admin import admin_bp
 
 app = Flask(__name__)
 
@@ -24,6 +25,7 @@ app.register_blueprint(recommend_bp)
 app.register_blueprint(appointment_bp)
 app.register_blueprint(chat_bp)
 app.register_blueprint(counselor_bp)
+app.register_blueprint(admin_bp)
 
 app.secret_key = "secret_key123"
 
@@ -32,6 +34,7 @@ db = client["db_reachOut"]
 collection = db["journal"]
 appointments_collection = db["appointment"]
 mood_collection = db["mood"]
+users_collection = db["users"]
 
 
 @app.route("/")
@@ -89,6 +92,8 @@ def user():
         today = datetime.date.today().isoformat()
         if mood_data["mood_date"] != today:
             mood = []
+            mood_collection.delete_one({"user_id": user_id})
+
 
     success = session.pop("success", None)
     successAppoin = session.pop("successAppoin", None)
@@ -165,6 +170,7 @@ def logout():
     session.pop("gender", None)
     session.pop("uid", None)
     session.pop("age", None)
+    session.pop("counsellor", None)
     # Redirect to the sign-in page
     return redirect(url_for("signin"))  # Assuming your sign-in route is named 'signin'
 

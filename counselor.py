@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime, time, timedelta
 from bson.objectid import ObjectId
@@ -17,11 +17,6 @@ db = client["db_reachOut"]
 appointments_collection = db["appointment"]
 
 
-def get_pending_appointments():
-    pending_appointments = appointments_collection.find({"status": "pending"})
-    return list(pending_appointments)
-
-
 @counselor_bp.route("/counselor")
 def counselor():
     pending_appointments = get_pending_appointments()
@@ -29,6 +24,9 @@ def counselor():
     completed_appointments = list(appointments_collection.find({"status": "completed"}))
     completed_appointments_count = len(completed_appointments)
 
+    if(session.get("counsellor") != True):
+        return redirect(url_for('signin'))
+    
     return render_template(
         "counsellor.html",
         pending_appointments=pending_appointments,
@@ -37,6 +35,10 @@ def counselor():
         completed_appointments_count=completed_appointments_count,
     )
 
+
+def get_pending_appointments():
+    pending_appointments = appointments_collection.find({"status": "pending"})
+    return list(pending_appointments)
 
 @counselor_bp.route("/get_available_slots", methods=["POST"])
 def get_available_slots():

@@ -123,6 +123,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
                         <h4 class="my-4">Pending Appointments</h4>
+                        {% if pending_appointments %}
                         <ul class="list-group">
                             {% for appointment in pending_appointments %}
                             <li class="list-group-item">
@@ -139,6 +140,9 @@
                             </li>
                             {% endfor %}
                         </ul>
+                        {% else %}
+                        <p>No pending appointments</p>
+                        {% endif %}
                     </div>
                     <div class="tab-pane fade" id="confirmed" role="tabpanel" aria-labelledby="confirmed-tab">
                         <h4 class="my-4">Confirmed Appointments</h4>
