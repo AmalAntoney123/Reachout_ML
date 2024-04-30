@@ -1,7 +1,7 @@
 # Reachout
 
 <div align="center">
- <img src="[https://i.imgur.com/SRTXxF7.png](https://img.freepik.com/free-vector/mental-health-awareness-concept_52683-37916.jpg)" alt="Reachout Logo" width="200" height="200">
+ <img src="[https://img.freepik.com/free-vector/mental-health-awareness-concept_52683-37916.jpg]" alt="Reachout Logo" width="200" height="200">
  <h3>Empowering Student Wellbeing</h3>
 </div>
 
