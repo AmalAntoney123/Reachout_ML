@@ -1,8 +1,8 @@
 # Reachout
 
 <div align="center">
- <img src="https://img.freepik.com/free-vector/mental-health-awareness-concept_52683-37916.jpg" alt="Reachout Logo" width="200" height="200">
- <h3>Empowering Student Wellbeing</h3>
+  <img src="https://img.freepik.com/free-vector/mental-health-awareness-concept_52683-37916.jpg" alt="Reachout Logo" width="200" height="200">
+  <h3>Empowering Student Wellbeing</h3>
 </div>
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -48,6 +48,10 @@ The primary goal of Reachout is to promote better mental health among students i
 - Log in to the counselor portal.
 - View and manage booking requests from students.
 - Communicate with students regarding their appointments.
+
+### Admin and Counselor Accounts
+
+- To log in as an admin or counselor, create an account with the username 'admin' or 'counselor' respectively. This will grant you access to the respective account.
 
 ## 🤝 Contributing
 
