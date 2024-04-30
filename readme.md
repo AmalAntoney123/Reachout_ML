@@ -23,6 +23,8 @@ The primary goal of Reachout is to promote better mental health among students i
 
 - **User-friendly Interface**: The web application is built using Flask, a Python web framework, and utilizes HTML and Bootstrap for a responsive and visually appealing user interface.
 
+- **Journal System**: Users can create and maintain personal journals, allowing them to record their thoughts, feelings, and experiences. They can easily access and review their previous journal entries.
+
 ## 🚀 Installation and Setup
 
 1. Clone the repository: `git clone https://github.com/AmalAntoney123/ML_mental_health.git`
@@ -42,6 +44,7 @@ The primary goal of Reachout is to promote better mental health among students i
 - Track and update your daily mood changes.
 - Receive personalized recommendations based on your mood patterns.
 - Book appointments with counselors through the booking facility.
+- Create and maintain personal journals to record thoughts and experiences.
 
 ### Counselors
 
